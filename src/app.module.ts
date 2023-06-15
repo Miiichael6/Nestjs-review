@@ -10,7 +10,7 @@ import { CountriesModule } from './countries/countries.module';
   controllers: [AppController],
   providers: [AppService],
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot(), // .env variables
 
     TypeOrmModule.forRoot({
       type: "postgres",
