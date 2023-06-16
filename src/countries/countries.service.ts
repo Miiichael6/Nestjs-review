@@ -25,15 +25,29 @@ export class CountriesService {
   }
 
   async findAll() {
-    const countries = await this.countryRepository.find();
+    const countries = await this.countryRepository.find({
+      relations: { users: true },
+    });
 
-    return countries;
+    const simplifiedCountries = countries.map(country => ({
+      id: country.id,
+      name: country.name,
+      users: country.users.map(user => ({
+        id: user.id,
+        name: user.name,
+        username: user.username
+      }))
+    }));
+
+    return simplifiedCountries;
   }
 
   async findOne(id: number) {
-    const country = await this.countryRepository.findOne({where: {
-      id: id
-    }})
+    const country = await this.countryRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
 
     return country;
   }
