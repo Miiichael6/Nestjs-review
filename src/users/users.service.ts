@@ -89,9 +89,16 @@ export class UsersService {
   handleDbError(error: any) {
     const detailError = error.detail;
     const errorMessage = error.message;
+    console.log(error.detail)
 
     if (error.code === '23505') throw new BadRequestException(detailError);
 
     throw new NotFoundException(errorMessage);
+  }
+
+  async deleteAllUsers () {
+    await this.userRepository.clear();
+
+    return "all users deleted"
   }
 }

@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import {ConfigModule} from "@nestjs/config";
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CountriesModule } from './countries/countries.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   controllers: [AppController],
@@ -25,7 +26,9 @@ import { CountriesModule } from './countries/countries.module';
     
     UsersModule,
     
-    CountriesModule
+    CountriesModule,
+    
+    SeedModule
   
   ],
 })

@@ -17,7 +17,7 @@ export class User {
 
   // Muchos Paises pertenecen a un Usuario
   @ManyToOne(() => Country, (country) => country.users, { onDelete: 'CASCADE' })
-  country: Country;
+  country: Country | number ;
 
   @Column({ type: 'int' })
   age: number;

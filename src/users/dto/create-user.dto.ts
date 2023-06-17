@@ -18,7 +18,7 @@ export class CreateUserDto {
   lastname: string;
 
   @IsInt()
-  country: Country;
+  country: number;
   
   @IsInt()
   age: number;
