@@ -1,5 +1,5 @@
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { User } from 'src/users/entities/user.entity';
+
 export const users: CreateUserDto[] = [
   {
     name: "Michael",

@@ -1,6 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+  InternalServerErrorException
+} from '@nestjs/common';
 import { CreateCountryDto } from './dto/create-country.dto';
-import { UpdateCountryDto } from './dto/update-country.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Country } from './entities/country.entity';
 import { Repository } from 'typeorm';
@@ -13,15 +17,19 @@ export class CountriesService {
   ) {}
 
   async create(createCountryDto: CreateCountryDto) {
-    const { name } = createCountryDto;
+    try {
+      const { name } = createCountryDto;
 
-    const country = this.countryRepository.create({
-      name,
-    });
+      const country = this.countryRepository.create({
+        name,
+      });
 
-    await this.countryRepository.save(country);
+      await this.countryRepository.save(country);
 
-    return country;
+      return country;
+    } catch (error: any) {
+      this.handleCountryError(error);
+    }
   }
 
   async findAll() {
@@ -29,34 +37,59 @@ export class CountriesService {
       relations: { users: true },
     });
 
-    const simplifiedCountries = countries.map(country => ({
-      id: country.id,
-      name: country.name,
-      users: country.users.map(user => ({
-        id: user.id,
-        name: user.name,
-        username: user.username
+    const simplifiedCountries = countries
+      .map((country) => ({
+        id: country.id,
+        name: country.name,
+        users: country.users.map((user) => ({
+          id: user.id,
+          name: user.name,
+          username: user.username,
+        })),
       }))
-    }));
+      .sort((countryA, countryB) => countryA.id - countryB.id);
 
     return simplifiedCountries;
   }
 
   async findOne(id: number) {
-    const country = await this.countryRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
+    try {
+      const country = await this.countryRepository.findOne({
+        where: {
+          id: id,
+        },
+      });
 
-    return country;
+      if (!country) {
+        throw new NotFoundException(`Country with (id)=(${id}) doesn't exist `);
+      }
+
+      return country;
+    } catch (error) {
+      this.handleCountryError(error);
+    }
   }
 
-  update(id: number, updateCountryDto: UpdateCountryDto) {
-    return `This action updates a #${id} country`;
+  async remove(id: number) {
+    try {
+      await this.findOne(id);
+
+      const countryToDelete = await this.countryRepository.delete({ id: id });
+
+      return countryToDelete;
+    } catch (error) {
+      this.handleCountryError(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} country`;
+  handleCountryError(error: any) {
+    const errorDetail = error.detail;
+    const errorMessage = error.message;
+
+    if(errorDetail || errorMessage){
+      throw new BadRequestException(`${errorDetail || errorMessage}`);
+    }
+
+    throw new InternalServerErrorException()
   }
 }
