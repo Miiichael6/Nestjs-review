@@ -1,9 +1,5 @@
-import { IsString, MaxLength, IsInt, MinLength } from "class-validator";
-import { Country } from "src/countries/entities/country.entity";
-
+import { IsString, MaxLength, IsInt, MinLength, IsOptional } from "class-validator";
 export class CreateUserDto {
-
-  
   @MaxLength(10)
   @MinLength(7)
   @IsString()
@@ -18,7 +14,8 @@ export class CreateUserDto {
   lastname: string;
 
   @IsInt()
-  country: number;
+  @IsOptional()
+  country?: number;
   
   @IsInt()
   age: number;

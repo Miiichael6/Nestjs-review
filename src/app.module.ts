@@ -6,6 +6,8 @@ import {ConfigModule} from "@nestjs/config";
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CountriesModule } from './countries/countries.module';
 import { SeedModule } from './seed/seed.module';
+import { PostsModule } from './posts/posts.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   controllers: [AppController],
@@ -28,7 +30,11 @@ import { SeedModule } from './seed/seed.module';
     
     CountriesModule,
     
-    SeedModule
+    SeedModule,
+    
+    PostsModule,
+    
+    CommentsModule
   
   ],
 })

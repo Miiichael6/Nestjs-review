@@ -9,12 +9,18 @@ async function main() {
 
   app.useGlobalPipes(
     new ValidationPipe({
+      // Para las Validaciones de los DataTransformObject
+      // * para validad que llegen
       whitelist: true,
+      // * para validar que no mandes prop que no debes
       forbidNonWhitelisted: true,
-      // transform: true,
-      // transformOptions: {
-      //   enableImplicitConversion: true,
-      // }
+
+      // * Tranformar simplemente en pipes
+      transform: true,
+      // * Transforma el objeto DTO con las propiedades que especificamos
+      transformOptions: {
+        enableImplicitConversion: true,
+      }
     })
   );
 

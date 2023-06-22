@@ -34,7 +34,7 @@ export class UsersService {
 
   async findAll() {
     const users = await this.userRepository.find({
-      relations: { country: true },
+      relations: { country: true, posts: true },
       select: { country: { name: true } },
     });
 
@@ -49,7 +49,7 @@ export class UsersService {
 
       if (!user) {
         const notFoundUser = `User con Id:<<${id}>> doesn't exist`;
-        throw new Error(notFoundUser);
+        throw new NotFoundException(notFoundUser);
       }
 
       return user;
@@ -60,11 +60,11 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     try {
-      const user = await this.userRepository.findOneBy({ id: id });
+      const user = this.findOne(id)
 
       if (!user) {
         const notFoundUser = `User with Id:<<${id}>> doesn't exist`;
-        throw new Error(notFoundUser);
+        throw new NotFoundException(notFoundUser);
       }
 
       const dataToUpdate = { id: id, ...updateUserDto };
@@ -89,7 +89,6 @@ export class UsersService {
   handleDbError(error: any) {
     const detailError = error.detail;
     const errorMessage = error.message;
-    console.log(error.detail)
 
     if (error.code === '23505') throw new BadRequestException(detailError);
 

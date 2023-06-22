@@ -9,9 +9,11 @@ export class Country {
   @Column({ type: 'text', unique: true })
   name: string;
 
-  // Un pais tiene muchos Usuarios
-  @OneToMany(() => User, (user) => user.country, {onDelete: "CASCADE"})
-  users: User[];
+  // * One(Country) => { Entidad en la que estamos}
+  // * to(tiene(verbo)) => { cualquier verbo }
+  // * Many(User) => { A la tabla A la que relacionamos}
 
-  
+  // ? Un pais(Country - One) To-tiene(contiene) muchos Usuarios(Users -Many)
+  @OneToMany(() => User, (user) => user.country, { onDelete: 'CASCADE' })
+  users: User[];
 }
